@@ -1,15 +1,7 @@
 import ctypes
-import json
-import numpy as np
-import time
 
 lib = ctypes.cdll.LoadLibrary('./moildev.so')
 
-
-# C++ referene is somthing of
-# Java
-# C#
-# Python
 
 class Moildev(object):
 
