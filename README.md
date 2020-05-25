@@ -38,8 +38,8 @@ moildev = Moildev(camera_name, sensor_width, sensor_height, Icx, Icy, ratio,
 ##### Example:
 
 ```
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 
-					2592, 1944, 4.05,0, 0, 0, 0, -47.96, 222.86)
+moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
+                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
 ```
 
 #### 2.2 test
@@ -56,10 +56,18 @@ The function will return feedback from share object library to make sure the lib
 
 ```
 from Moildev import Moildev
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 
-					2592, 1944, 4.05,0, 0, 0, 0, -47.96, 222.86)
+moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
+                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
 moildev.test()
 ```
+
+When you run the code, the output will be:
+
+```
+Hello From C++
+```
+
+
 
 #### 2.3 AnypointM
 
@@ -88,17 +96,28 @@ Anypoint Mode 1, the purpose is to generate a pair of X-Y Maps for the specified
 
 ```
 from Moildev import Moildev
+import numpy as np
 import cv2
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 
-					2592, 1944, 4.05,0, 0, 0, 0, -47.96, 222.86)
 
-m_ratio = 2592/ sensor_width;
+moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
+                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+
+image_input = cv2.imread("./Image/image.jpg")
+h, w = image_input.shape[:2]
+sensor_width = 2592
+image_width = w
+m_ratio = image_width / sensor_width
 mapX = np.zeros((h, w), dtype=np.float32)
 mapY = np.zeros((h, w), dtype=np.float32)
-image_input = cv2.imread( "image.jpg")
+alphaOffset = 0
+betaOffset = 0
+zoom = 4
 
-moildev.AnyPointM(mapX, mapY, w, h, alphaOffset, betaOffset, self.zoom, m_ratio)
+moildev.AnyPointM(mapX, mapY, w, h, alphaOffset, betaOffset, zoom, m_ratio)
 result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
+result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
+cv2.imshow("Result", result)
+cv2.waitKey(10000)
 ```
 
 #### 2.3 AnyPointM2
@@ -128,17 +147,28 @@ Anypoint mode 2, the purpose is to generate a pair of X-Y Maps for the specified
 
 ```
 from Moildev import Moildev
+import numpy as np
 import cv2
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 
-					2592, 1944, 4.05,0, 0, 0, 0, -47.96, 222.86)
 
-m_ratio = 2592/ sensor_width;
+moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
+                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+
+image_input = cv2.imread("./Image/image.jpg")
+h, w = image_input.shape[:2]
+sensor_width = 2592
+image_width = w
+m_ratio = image_width / sensor_width
 mapX = np.zeros((h, w), dtype=np.float32)
 mapY = np.zeros((h, w), dtype=np.float32)
-image_input = cv2.imread( "image.jpg")
+thetaX_degree = 0
+thetaY_degree = 0
+zoom = 4
 
-moildev.AnyPointM2(mapX, mapY, w, h, thetaX_degree, thetaY_degree, self.zoom, m_ratio)
+moildev.AnyPointM2(mapX, mapY, w, h, thetaX_degree, thetaY_degree, zoom, m_ratio)
 result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
+result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
+cv2.imshow("Result", result)
+cv2.waitKey(10000)
 ```
 
 #### 2.4 PanoramaM
@@ -167,23 +197,32 @@ To generate a pair of X-Y Maps for alpha within 0..alpha_max degree, the result 
 
 ```
 from Moildev import Moildev
+import numpy as np
 import cv2
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 
-					2592, 1944, 4.05,0, 0, 0, 0, -47.96, 222.86)
 
-m_ratio = 2592/ sensor_width;
+moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
+                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+
+image_input = cv2.imread("./Image/image.jpg")
+h, w = image_input.shape[:2]
+sensor_width = 2592
+image_width = w
+m_ratio = image_width / sensor_width
 mapX = np.zeros((h, w), dtype=np.float32)
 mapY = np.zeros((h, w), dtype=np.float32)
-image_input = cv2.imread( "image.jpg")
+alpha_max = 110
 
 moildev.PanoramaM(mapX, mapY, w, h, m_ratio, alpha_max)
 result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
+result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
+cv2.imshow("Result", result)
+cv2.waitKey(10000)
 ```
 
 #### 2.4 PanoramaM_Rt
 
 ```
-PanoramaM_Rt(mapX, mapY, w, h, magnification, alpha_max, iC_alpha_degree, iC_beta_degree)
+PanoramaM_Rt(mapX, mapY, w, h, m_ratio, alpha_max, iC_alpha_degree, iC_beta_degree)
 ```
 
 ##### Purpose:
@@ -208,30 +247,39 @@ To generate a pair of X-Y Maps for alpha within 0..alpha_max degree, the result 
 
 ```
 from Moildev import Moildev
+import numpy as np
 import cv2
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 
-					2592, 1944, 4.05,0, 0, 0, 0, -47.96, 222.86)
 
-m_ratio = 2592/ sensor_width;
+moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
+                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+
+image_input = cv2.imread("./Image/image.jpg")
+h, w = image_input.shape[:2]
+sensor_width = 2592
+image_width = w
+m_ratio = image_width / sensor_width
 mapX = np.zeros((h, w), dtype=np.float32)
 mapY = np.zeros((h, w), dtype=np.float32)
-image_input = cv2.imread( "image.jpg")
+alpha_max = 110
+iC_alpha_degree = 0
+iC_beta_degree = 0
 
-moildev.PanoramaM_Rt(mapX, mapY, w, h, magnification, alpha_max, iC_alpha_degree, iC_beta_degree)
+moildev.PanoramaM_Rt(mapX, mapY, w, h, m_ratio, alpha_max, iC_alpha_degree, iC_beta_degree)
 result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
+result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
+cv2.imshow("Result", result)
+cv2.waitKey(10000)
 ```
 
 #### 2.5 revPanorama
 
 ```
-revPanorama(panoImage, result, w, h, iC_alpha_degree, iC_beta_degree)
+revPanorama(panoImage, result, w, h, alpha_max, iC_beta_degree)
 ```
 
 ##### Purpose:
 
-....
-
-....
+To generate the image reverse image from panorama that can change the focus direction from the original images.  The panorama reverse image centered at the 3D direction with alpha_max = max of alpha and beta = iC_beta_degree.
 
 ##### Parameter:
 
@@ -240,7 +288,8 @@ revPanorama(panoImage, result, w, h, iC_alpha_degree, iC_beta_degree)
 . result :  Memory pointer of result image
 . w : width of the Map (both mapX and mapY)
 . h : height of the Map (both mapX and mapY)
-. iC_alpha_degree : alpha angle of panorana center.
+. alpha_max : max of alpha. The recommended vaule is half of camera FOV. For example, use
+  90 for a 180 degree fisheye images and use 110 for a 220 degree fisheye images.
 . iC_beta_degree : beta angle of panorama center. 
 ```
 
@@ -248,24 +297,36 @@ revPanorama(panoImage, result, w, h, iC_alpha_degree, iC_beta_degree)
 
 ```
 from Moildev import Moildev
+import numpy as np
 import cv2
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 
-					2592, 1944, 4.05,0, 0, 0, 0, -47.96, 222.86)
 
-m_ratio = 2592/ sensor_width;
+moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
+                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+
+image_input = cv2.imread("./Image/image.jpg")
+h, w = image_input.shape[:2]
+sensor_width = 2592
+image_width = w
+m_ratio = image_width / sensor_width
+size = h, w, 3
+result = np.zeros(size, dtype=np.uint8)
 mapX = np.zeros((h, w), dtype=np.float32)
 mapY = np.zeros((h, w), dtype=np.float32)
-image_input = cv2.imread( "image.jpg")
+alpha_max = 110
+iC_alpha_degree = 60
+iC_beta_degree = -85
 
-moildev.PanoramaM_Rt(mapX, mapY, w, h, magnification, alpha_max, iC_alpha_degree, iC_beta_degree)
-result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
-moildev.revPanorama(panoImage, result, w, h, iC_alpha_degree, iC_beta_degree)
-result = result
+moildev.PanoramaM_Rt(mapX, mapY, w, h, m_ratio, alpha_max, iC_alpha_degree, iC_beta_degree)
+panoImage = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
+moildev.revPanorama(panoImage, result, w, h, alpha_max, iC_beta_degree)
+result = cv2.resize(dst, (800, 600), interpolation=cv2.INTER_AREA)
+cv2.imshow("Result", result)
+cv2.waitKey(10000)
 ```
 
 ### 3. About Us
 
-Omnidirectional, Surveillance and Imaging laboratory Ming Chi University of Technology, Taiwan
+***Omnidirectional, Surveillance and Imaging laboratory Ming Chi University of Technology, Taiwan***
 
 
 

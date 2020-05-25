@@ -1,6 +1,6 @@
 import ctypes
 
-lib = ctypes.cdll.LoadLibrary('./moildev.so')
+lib = ctypes.cdll.LoadLibrary('./libs/moildev.so')
 
 
 class Moildev(object):
@@ -56,6 +56,8 @@ class Moildev(object):
 
         lib.max.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_int]
         lib.max.restype = ctypes.c_int
+
+        name = name.encode('utf-8')
 
         self.obj = lib.moildev_new(name, cswidth, csheight, Icx, Icy, Ratio, ImWidth, ImHeight,
                                    Para0, Para1, Para2, Para3, Para4, Para5, calibRatio)
