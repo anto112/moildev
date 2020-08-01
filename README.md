@@ -2,6 +2,21 @@
 
 MOIL SDK for python is a collection of functions support python to developments fisheye image applications. this function using share object library C++ wrapper by **ctypes** python and work just in ***Linux Operating system (OS)***.
 
+- Anypoint image
+
+![](./assets/anypoint.jpg)
+
+- Panorama Image 
+
+![](./assets/panorama.png)
+``
+
+## How to install
+This library now available in pypi distribution. visit link here https://pypi.org/project/Moildev/ 
+```
+pip install moildev
+```
+
 ### 1. Import Library
 
 ```
@@ -16,8 +31,8 @@ This is the initial configuration that you need provide the parameter. The camer
 
 ```
 moildev = Moildev(camera_name, sensor_width, sensor_height, Icx, Icy, ratio, 
-			imageWidth, imageHeight, parameter0, parameter1, parameter2, parameter3,
-            parameter4, parameter5, calibrationRatio)
+        imageWidth, imageHeight, parameter0, parameter1, parameter2, 
+        parameter3, parameter4, parameter5, calibrationRatio)
 ```
 
 ##### Parameter:
