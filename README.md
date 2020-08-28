@@ -1,6 +1,6 @@
 ## MOIL SDK For Python
 
-MOIL SDK for python is a collection of functions support python to developments fisheye image applications. this function using share object library C++ wrapper by **ctypes** python and work just in ***Linux Operating system (OS)***.
+MOIL SDK for python is a collection of functions support python to developments fisheye image applications. this function using share object library C++ wrapper by **ctypes** python.
 
 - Anypoint image
 
@@ -9,33 +9,32 @@ MOIL SDK for python is a collection of functions support python to developments 
 - Panorama Image 
 
 ![](./assets/panorama.png)
-``
 
-## How to install
+## 1. How to install
 This library now available in pypi distribution. visit link here https://pypi.org/project/Moildev/ 
 ```
-pip install moildev
+$ pip install moildev
 ```
 
-### 1. Import Library
+### 2. Import Library
 
 ```
-from Moildev import Moildev
+>> from Moildev import Moildev
 ```
 
-### 2. API Reference
+### 3. Application programming interface (API) Reference
 
-#### 2.1 Initial configuration
+To test this API using image from calibrated fish-eye camera, you can download the image from [this link](https://drive.google.com/file/d/1Cq8vIcsE7I8NYcL_nb8k7OBYjy9LLCx6/view?usp=sharing). 
 
-This is the initial configuration that you need provide the parameter. The camera parameter is the result from calibration camera by MOIL laboratory.  before the successive functions can work    correctly,configuration is necessary in the beginning of program.
+##### 3.1 Initial configuration
+
+This is the initial configuration that you need provide the parameter. The camera parameter is the result from calibration camera by MOIL laboratory.  before the successive functions can work correctly,configuration is necessary in the beginning of program. 
 
 ```
-moildev = Moildev(camera_name, sensor_width, sensor_height, Icx, Icy, ratio, 
-        imageWidth, imageHeight, parameter0, parameter1, parameter2, 
-        parameter3, parameter4, parameter5, calibrationRatio)
+moildev = Moildev(camera_name, sensor_width, sensor_height, Icx, Icy, ratio,imageWidth, imageHeight, parameter0, parameter1, parameter2, parameter3,parameter4, parameter5, calibrationRatio)
 ```
 
-##### Parameter:
+**Parameter:**
 
 ```
 . camera_name - A string to describe this camera
@@ -50,51 +49,49 @@ moildev = Moildev(camera_name, sensor_width, sensor_height, Icx, Icy, ratio,
 . parameter0 .. parameter5 : calibration parameters
 ```
 
-##### Example:
+**Example:**
 
 ```
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
-                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+>> moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
 ```
 
-#### 2.2 test
+##### 3.2 test
 
 ```
 moildev.test()
 ```
 
-##### Purpose:
+**Purpose:**
 
 The function will return feedback from share object library to make sure the library work properly.
 
-##### Example:
+**Example:**
 
 ```
-from Moildev import Moildev
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
-                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
-moildev.test()
+>> from Moildev import Moildev
+>> moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+>> moildev.test()
 ```
 
 When you run the code, the output will be:
 
 ```
-Hello From C++
+Hello From C++ share object Library
 ```
 
 
 
-#### 2.3 AnypointM
+##### 3.3 AnypointM
 
 ```
 moildev.AnyPointM(mapX, mapY, w, h, alphaOffset, betaOffset, zoom, m_ratio)
 ```
 
-##### Purpose:
+**Purpose:**
 
 Anypoint Mode 1, the purpose is to generate a pair of X-Y Maps for the specified alpha, beta and zoom parameters, the result X-Y Maps can be used later to remap the original fisheye image to the target angle image. The result rotation is betaOffset degree rotation around the Z-axis(roll) after alphaOffset degree rotation around the X-axis(pitch).
 
-##### Parameter:
+**Parameter:**
 
 ```
 . mapX : memory pointer of result X-Map   
@@ -107,45 +104,43 @@ Anypoint Mode 1, the purpose is to generate a pair of X-Y Maps for the specified
 . m_ratio : input imageWidth / sensor_width, m_ratio is normally equal to 1.  
 ```
 
-##### Example :
+**Example :**
 
 ```
-from Moildev import Moildev
-import numpy as np
-import cv2
+>> from Moildev import Moildev
+>> import numpy as np
+>> import cv2
 
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
-                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+>> moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+>> image_input = cv2.imread("./Image/image.jpg")
+>> h, w = image_input.shape[:2]
+>> sensor_width = 2592
+>> image_width = w
+>> m_ratio = image_width / sensor_width
+>> mapX = np.zeros((h, w), dtype=np.float32)
+>> mapY = np.zeros((h, w), dtype=np.float32)
+>> alphaOffset = 0
+>> betaOffset = 0
+>> zoom = 4
 
-image_input = cv2.imread("./Image/image.jpg")
-h, w = image_input.shape[:2]
-sensor_width = 2592
-image_width = w
-m_ratio = image_width / sensor_width
-mapX = np.zeros((h, w), dtype=np.float32)
-mapY = np.zeros((h, w), dtype=np.float32)
-alphaOffset = 0
-betaOffset = 0
-zoom = 4
-
-moildev.AnyPointM(mapX, mapY, w, h, alphaOffset, betaOffset, zoom, m_ratio)
-result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
-result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
-cv2.imshow("Result", result)
-cv2.waitKey(10000)
+>> moildev.anyPointM(mapX, mapY, w, h, alphaOffset, betaOffset, zoom, m_ratio)
+>> result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
+>> result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
+>> cv2.imshow("Result", result)
+>> cv2.waitKey(0)
 ```
 
-#### 2.3 AnyPointM2
+##### 3.4 AnyPointM2
 
 ```
 moildev.AnyPointM(mapX, mapY, w, h, thetaX_degree, thetaY_degree, zoom, m_ratio)
 ```
 
-##### Purpose :
+**Purpose :**
 
 Anypoint mode 2, the purpose is to generate a pair of X-Y Maps for the specified thetaX, thetaY and zoom parameters, the result X-Y Maps can be used later to remap the original fisheye image to the target angle image. The result rotation is thetaY degree rotation around the Y-axis(yaw) after thetaX degree rotation around the X-axis(pitch).
 
-##### Parameter:
+**Parameter:**
 
 ```
 . mapX : memory pointer of result X-Map   
@@ -158,45 +153,43 @@ Anypoint mode 2, the purpose is to generate a pair of X-Y Maps for the specified
 . m_ratio : input imageWidth / sensor_width, m_ratio is normally equal to 1.  
 ```
 
-##### Example :
+**Example :**
 
 ```
-from Moildev import Moildev
-import numpy as np
-import cv2
+>> from Moildev import Moildev
+>> import numpy as np
+>> import cv2
 
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
-                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+>> moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+>> image_input = cv2.imread("./Image/image.jpg")
+>> h, w = image_input.shape[:2]
+>> sensor_width = 2592
+>> image_width = w
+>> m_ratio = image_width / sensor_width
+>> mapX = np.zeros((h, w), dtype=np.float32)
+>> mapY = np.zeros((h, w), dtype=np.float32)
+>> thetaX_degree = 0
+>> thetaY_degree = 0
+>> zoom = 4
 
-image_input = cv2.imread("./Image/image.jpg")
-h, w = image_input.shape[:2]
-sensor_width = 2592
-image_width = w
-m_ratio = image_width / sensor_width
-mapX = np.zeros((h, w), dtype=np.float32)
-mapY = np.zeros((h, w), dtype=np.float32)
-thetaX_degree = 0
-thetaY_degree = 0
-zoom = 4
-
-moildev.AnyPointM2(mapX, mapY, w, h, thetaX_degree, thetaY_degree, zoom, m_ratio)
-result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
-result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
-cv2.imshow("Result", result)
-cv2.waitKey(10000)
+>> moildev.AnyPointM2(mapX, mapY, w, h, thetaX_degree, thetaY_degree, zoom, m_ratio)
+>> result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
+>> result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
+>> cv2.imshow("Result", result)
+>> cv2.waitKey(0)
 ```
 
-#### 2.4 PanoramaM
+##### 3.5 PanoramaM
 
 ```
 PanoramaM(mapX, mapY, w, h, m_ratio, alpha_max)
 ```
 
-##### Purpose :
+**Purpose :**
 
-To generate a pair of X-Y Maps for alpha within 0..alpha_max degree, the result X-Y Maps can be used later to generate a panorama image from the original fisheye image.
+To generate a pair of X-Y Maps for alpha within 0..alpha_max degree, the result X-Y Maps can be used later to generate a panorama image from the original fish-eye image.
 
-##### Parameter:
+**Parameter:**
 
 ```
 . mapX : memory pointer of result X-Map   
@@ -208,43 +201,40 @@ To generate a pair of X-Y Maps for alpha within 0..alpha_max degree, the result 
   90 for a 180 degree fisheye images and use 110 for a 220 degree fisheye images.
 ```
 
-##### Example :
+**Example :**
 
 ```
-from Moildev import Moildev
-import numpy as np
-import cv2
+>> from Moildev import Moildev
+>> import numpy as np
+>> import cv2
+>> moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+>> image_input = cv2.imread("./Image/image.jpg")
+>> h, w = image_input.shape[:2]
+>> sensor_width = 2592
+>> image_width = w
+>> m_ratio = image_width / sensor_width
+>> mapX = np.zeros((h, w), dtype=np.float32)
+>> mapY = np.zeros((h, w), dtype=np.float32)
+>> alpha_max = 110
 
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
-                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
-
-image_input = cv2.imread("./Image/image.jpg")
-h, w = image_input.shape[:2]
-sensor_width = 2592
-image_width = w
-m_ratio = image_width / sensor_width
-mapX = np.zeros((h, w), dtype=np.float32)
-mapY = np.zeros((h, w), dtype=np.float32)
-alpha_max = 110
-
-moildev.PanoramaM(mapX, mapY, w, h, m_ratio, alpha_max)
-result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
-result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
-cv2.imshow("Result", result)
-cv2.waitKey(10000)
+>> moildev.PanoramaM(mapX, mapY, w, h, m_ratio, alpha_max)
+>> result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
+>> result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
+>> cv2.imshow("Result", result)
+>> cv2.waitKey(0)
 ```
 
-#### 2.4 PanoramaM_Rt
+##### 3.6 PanoramaM_Rt
 
 ```
 PanoramaM_Rt(mapX, mapY, w, h, m_ratio, alpha_max, iC_alpha_degree, iC_beta_degree)
 ```
 
-##### Purpose:
+**Purpose:**
 
-To generate a pair of X-Y Maps for alpha within 0..alpha_max degree, the result X-Y Maps can be used later to generate a panorama image from the original fisheye image. The panorama image centered at the 3D direction with alpha = iC_alpha_degree and beta = iC_beta_degree.
+To generate a pair of X-Y Maps for alpha within 0..alpha_max degree, the result X-Y Maps can be used later to generate a panorama image from the original fish-eye image. The panorama image centered at the 3D direction with alpha = iC_alpha_degree and beta = iC_beta_degree.
 
-##### Parameter:
+**Parameter:**
 
 ```
 . mapX : memory pointer of result X-Map   
@@ -258,45 +248,43 @@ To generate a pair of X-Y Maps for alpha within 0..alpha_max degree, the result 
 . iC_beta_degree : beta angle of panorama center. 
 ```
 
-##### Example :
+**Example :**
 
 ```
-from Moildev import Moildev
-import numpy as np
-import cv2
+>> from Moildev import Moildev
+>> import numpy as np
+>> import cv2
 
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
-                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+>> moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+>> image_input = cv2.imread("./Image/image.jpg")
+>> h, w = image_input.shape[:2]
+>> sensor_width = 2592
+>> image_width = w
+>> m_ratio = image_width / sensor_width
+>> mapX = np.zeros((h, w), dtype=np.float32)
+>> mapY = np.zeros((h, w), dtype=np.float32)
+>> alpha_max = 110
+>> iC_alpha_degree = 0
+>> iC_beta_degree = 0
 
-image_input = cv2.imread("./Image/image.jpg")
-h, w = image_input.shape[:2]
-sensor_width = 2592
-image_width = w
-m_ratio = image_width / sensor_width
-mapX = np.zeros((h, w), dtype=np.float32)
-mapY = np.zeros((h, w), dtype=np.float32)
-alpha_max = 110
-iC_alpha_degree = 0
-iC_beta_degree = 0
-
-moildev.PanoramaM_Rt(mapX, mapY, w, h, m_ratio, alpha_max, iC_alpha_degree, iC_beta_degree)
-result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
-result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
-cv2.imshow("Result", result)
-cv2.waitKey(10000)
+>> moildev.PanoramaM_Rt(mapX, mapY, w, h, m_ratio, alpha_max, iC_alpha_degree, iC_beta_degree)
+>> result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
+>> result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
+>> cv2.imshow("Result", result)
+>> cv2.waitKey(0)
 ```
 
-#### 2.5 revPanorama
+##### 3.7 revPanorama
 
 ```
 revPanorama(panoImage, result, w, h, alpha_max, iC_beta_degree)
 ```
 
-##### Purpose:
+**Purpose:**
 
 To generate the image reverse image from panorama that can change the focus direction from the original images.  The panorama reverse image centered at the 3D direction with alpha_max = max of alpha and beta = iC_beta_degree.
 
-##### Parameter:
+**Parameter:**
 
 ```
 . panoImage : Input of panorama_Rt image
@@ -308,40 +296,76 @@ To generate the image reverse image from panorama that can change the focus dire
 . iC_beta_degree : beta angle of panorama center. 
 ```
 
-##### Example :
+**Example :**
 
 ```
-from Moildev import Moildev
-import numpy as np
-import cv2
+>> from Moildev import Moildev
+>> import numpy as np
+>> import cv2
 
-moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048,
-                  2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+>> moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+>> image_input = cv2.imread("./Image/image.jpg")
+>> h, w = image_input.shape[:2]
+>> sensor_width = 2592
+>> image_width = w
+>> m_ratio = image_width / sensor_width
+>> >> size = h, w, 3
+>> result = np.zeros(size, dtype=np.uint8)
+>> mapX = np.zeros((h, w), dtype=np.float32)
+>> mapY = np.zeros((h, w), dtype=np.float32)
+>> alpha_max = 110
+>> iC_alpha_degree = 60
+>> iC_beta_degree = -85
 
-image_input = cv2.imread("./Image/image.jpg")
-h, w = image_input.shape[:2]
-sensor_width = 2592
-image_width = w
-m_ratio = image_width / sensor_width
-size = h, w, 3
-result = np.zeros(size, dtype=np.uint8)
-mapX = np.zeros((h, w), dtype=np.float32)
-mapY = np.zeros((h, w), dtype=np.float32)
-alpha_max = 110
-iC_alpha_degree = 60
-iC_beta_degree = -85
-
-moildev.PanoramaM_Rt(mapX, mapY, w, h, m_ratio, alpha_max, iC_alpha_degree, iC_beta_degree)
-panoImage = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
-moildev.revPanorama(panoImage, result, w, h, alpha_max, iC_beta_degree)
-result = cv2.resize(dst, (800, 600), interpolation=cv2.INTER_AREA)
-cv2.imshow("Result", result)
-cv2.waitKey(10000)
+>> moildev.PanoramaM_Rt(mapX, mapY, w, h, m_ratio, alpha_max, iC_alpha_degree, iC_beta_degree)
+>> panoImage = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
+>> moildev.revPanorama(panoImage, result, w, h, alpha_max, iC_beta_degree)
+>> result = cv2.resize(panoImage, (800, 600), interpolation=cv2.INTER_AREA)
+>> cv2.imshow("Result", result)
+>> cv2.waitKey(0)
 ```
 
-### 3. About Us
+##### 3.8 Rotate
 
-***Omnidirectional, Surveillance and Imaging laboratory Ming Chi University of Technology, Taiwan***
+```
+Rotate(w, h, src, dst, angle)
+```
 
+**Purpose:**
 
+To rotate the image with specific angle and fast.
+
+**Parameter:**
+
+```
+. w : width of the Map (both mapX and mapY)
+. h : height of the Map (both mapX and mapY)
+. dst : destination image
+. src : source image/ image input
+. angle : the number of degree that want to rotate image
+```
+
+**Example :**
+
+```
+>> from Moildev import Moildev
+>> import numpy as np
+>> import cv2
+
+>> moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
+>> image_input = cv2.imread("./Image/image.jpg")
+>> h, w = image_input.shape[:2]
+>> size = h, w, 3
+>> dst = np.zeros(size, dtype=np.uint8)
+>> angle = 45
+
+>> moildev.Rotate(w, h, src, dst, angle)
+>> result = cv2.resize(dst, (800, 600), interpolation=cv2.INTER_AREA)
+>> cv2.imshow("Result", result)
+>> cv2.waitKey(0)
+```
+
+### 4. About Us
+
+***Omnidirectional, Surveillance and Imaging laboratory (OIL-Lab) Ming Chi University of Technology, Taiwan***
 

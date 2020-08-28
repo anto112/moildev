@@ -18,9 +18,8 @@ moildev.test()
 # betaOffset = 0
 # zoom = 4
 #
-# moildev.AnyPointM(mapX, mapY, w, h, alphaOffset, betaOffset, zoom, m_ratio)
+# moildev.anyPointM(mapX, mapY, w, h, alphaOffset, betaOffset, zoom, m_ratio)
 # result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
 # result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
 # cv2.imshow("Result", result)
-# cv2.waitKey(10000)
-help(Moildev.test)
+# cv2.waitKey(0)
