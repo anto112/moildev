@@ -197,7 +197,7 @@ Anypoint mode 2, the purpose is to generate a pair of X-Y Maps for the specified
 
 ##### **Create new file as and copy the code above. then running by python.**
 
-![](/home/anto112/Documents/moildev_library/moildev_sdk_for_python/assets/any-2.png)
+![](./assets/any-2.png)
 
 ##### 3.5 Panorama
 
@@ -251,7 +251,7 @@ To generate a pair of X-Y Maps for alpha within 0..alpha_max degree, the result 
 
 **Create new file as and copy the code above. then running by python.**
 
-![](/home/anto112/Documents/moildev_library/moildev_sdk_for_python/assets/pano.png)
+![](./assets/pano.png)
 
 
 
