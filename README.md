@@ -1,6 +1,6 @@
 ## Moildev Library
 
-Moildev Library is a collection of functions support python to developments fisheye image applications. this function using share object library C++ wrapper by **ctypes** python.
+Moildev Library is a collection of functions support python to developments fisheye image applications.
 
 - Anypoint image
 
@@ -96,7 +96,7 @@ Example:
 ##### 3.3 Anypoint mode-1
 
 ```
-moildev.AnyPointM(mapX, mapY, w, h, alphaOffset, betaOffset, zoom, m_ratio)
+moildev.AnyPointM(mapX, mapY, w, h, alpha, beta, zoom, m_ratio)
 ```
 
 **Purpose:**
@@ -110,8 +110,8 @@ Anypoint Mode 1, the purpose is to generate a pair of X-Y Maps for the specified
 . mapY : memory pointer of result Y-Map
 . w : width of the Map (both mapX and mapY)
 . h : height of the Map (both mapX and mapY)
-. alphaOffset : alpha offset 
-. betaOffset : beta offset
+. alpha : alpha offset 
+. beta : beta offset
 . zoom : decimal zoom factor, normally 1..12
 . m_ratio : input imageWidth / sensor_width, m_ratio is normally equal to 1.  
 ```
@@ -131,11 +131,11 @@ Anypoint Mode 1, the purpose is to generate a pair of X-Y Maps for the specified
 >> m_ratio = image_width / sensor_width
 >> mapX = np.zeros((h, w), dtype=np.float32)
 >> mapY = np.zeros((h, w), dtype=np.float32)
->> alphaOffset = 0
->> betaOffset = 0
+>> alpha = 0
+>> beta = 0
 >> zoom = 4
 
->> moildev.AnyPointM(mapX, mapY, w, h, alphaOffset, betaOffset, zoom, m_ratio)
+>> moildev.AnyPointM(mapX, mapY, w, h, alpha, beta, zoom, m_ratio)
 >> result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
 >> result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
 >> cv2.imshow("Result", result)
@@ -149,7 +149,7 @@ Anypoint Mode 1, the purpose is to generate a pair of X-Y Maps for the specified
 ##### 3.4 Anypoint mode-2
 
 ```
-moildev.AnyPointM2(mapX, mapY, w, h, thetaX_degree, thetaY_degree, zoom, m_ratio)
+moildev.AnyPointM2(mapX, mapY, w, h, alpha, beta, zoom, m_ratio)
 ```
 
 **Purpose :**
@@ -163,8 +163,8 @@ Anypoint mode 2, the purpose is to generate a pair of X-Y Maps for the specified
 . mapY : memory pointer of result Y-Map
 . w : width of the Map (both mapX and mapY)
 . h : height of the Map (both mapX and mapY)
-. thetaX_degree : thetaX 
-. thetaY_degree : thetaY
+. alpha : alpha 
+. beta : beta
 . zoom : decimal zoom factor, normally 1..12
 . m_ratio : input imageWidth / sensor_width, m_ratio is normally equal to 1.  
 ```
@@ -184,18 +184,18 @@ Anypoint mode 2, the purpose is to generate a pair of X-Y Maps for the specified
 >> m_ratio = image_width / sensor_width
 >> mapX = np.zeros((h, w), dtype=np.float32)
 >> mapY = np.zeros((h, w), dtype=np.float32)
->> thetaX_degree = 0
->> thetaY_degree = 65
+>> alpha = 0
+>> beta = 65
 >> zoom = 4
 
->> moildev.AnyPointM2(mapX, mapY, w, h, thetaX_degree, thetaY_degree, zoom, m_ratio)
+>> moildev.AnyPointM2(mapX, mapY, w, h, alpha, beta, zoom, m_ratio)
 >> result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
 >> result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
 >> cv2.imshow("Result", result)
 >> cv2.waitKey(0)
 ```
 
-##### **Create new file as and copy the code above. then running by python.**
+**Create new file as and copy the code above. then running by python.**
 
 ![](./assets/any-2.png)
 
@@ -219,8 +219,8 @@ To generate a pair of X-Y Maps for alpha within 0..alpha_max degree, the result 
 . m_ratio : input imageWidth / sensor_width, m_ratio is normally equal to 1.   
 . alpha_max : max of alpha. The recommended vaule is half of camera FOV. For example, use
   90 for a 180 degree fisheye images and use 110 for a 220 degree fisheye images.
-. iC_alpha_degree : alpha angle of panorana center.
-. iC_beta_degree : beta angle of panorama center. 
+. alpha : alpha angle of panorana center.
+. beta : beta angle of panorama center. 
 ```
 
 **Example :**
@@ -239,10 +239,10 @@ To generate a pair of X-Y Maps for alpha within 0..alpha_max degree, the result 
 >> mapX = np.zeros((h, w), dtype=np.float32)
 >> mapY = np.zeros((h, w), dtype=np.float32)
 >> alpha_max = 110
->> iC_alpha_degree = 0
->> iC_beta_degree = 0
+>> alpha = 0
+>> beta = 0
 
->> moildev.PanoramaM_Rt(mapX, mapY, w, h, m_ratio, alpha_max, iC_alpha_degree, iC_beta_degree)
+>> moildev.PanoramaM_Rt(mapX, mapY, w, h, m_ratio, alpha_max, alpha, beta)
 >> result = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
 >> result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
 >> cv2.imshow("Result", result)
@@ -258,7 +258,7 @@ To generate a pair of X-Y Maps for alpha within 0..alpha_max degree, the result 
 ##### 3.6 Reverse panorama image to reconstruct the center image
 
 ```
-revPanorama(panoImage, result, w, h, alpha_max, iC_beta_degree)
+revPanorama(panoImage, result, w, h, alpha_max, beta)
 ```
 
 **Purpose:**
@@ -274,7 +274,7 @@ To generate the image reverse image from panorama that can change the focus dire
 . h : height of the Map (both mapX and mapY)
 . alpha_max : max of alpha. The recommended vaule is half of camera FOV. For example, use
   90 for a 180 degree fisheye images and use 110 for a 220 degree fisheye images.
-. iC_beta_degree : beta angle of panorama center. 
+. beta : beta angle of panorama center. 
 ```
 
 **Example :**
@@ -298,9 +298,9 @@ To generate the image reverse image from panorama that can change the focus dire
 >> iC_alpha_degree = 50
 >> iC_beta_degree = 90
 
->> moildev.PanoramaM_Rt(mapX, mapY, w, h, m_ratio, alpha_max, iC_alpha_degree, iC_beta_degree)
+>> moildev.PanoramaM_Rt(mapX, mapY, w, h, m_ratio, alpha_max, alpha, beta)
 >> panoImage = cv2.remap(image_input, mapX, mapY, cv2.INTER_CUBIC)
->> moildev.revPanorama(panoImage, result, w, h, alpha_max, iC_beta_degree)
+>> moildev.revPanorama(panoImage, result, w, h, alpha_max, beta)
 >> result = cv2.resize(result, (800, 600), interpolation=cv2.INTER_AREA)
 >> cv2.imshow("Result", result)
 >> cv2.waitKey(0)
@@ -313,7 +313,7 @@ To generate the image reverse image from panorama that can change the focus dire
 ##### 3.8 Rotate
 
 ```
-Rotate(w, h, src, dst, angle)
+Rotate(w, h, src, angle)
 ```
 
 **Purpose:**
@@ -325,7 +325,6 @@ To rotate the image with specific angle and fast.
 ```
 . w : width of the Map (both mapX and mapY)
 . h : height of the Map (both mapX and mapY)
-. dst : destination image
 . src : source image/ image input
 . angle : the number of degree that want to rotate image
 ```
@@ -340,11 +339,9 @@ To rotate the image with specific angle and fast.
 >> moildev = Moildev("raspicam", 1.4, 1.4, 1320.0, 1017.0, 1.048, 2592, 1944, 0, 0, 0, 0, -47.96, 222.86, 4.05)
 >> image_input = cv2.imread("./Image/image.jpg")
 >> h, w = image_input.shape[:2]
->> size = h, w, 3
->> dst = np.zeros(size, dtype=np.uint8)
 >> angle = 45
 
->> moildev.Rotate(w, h, src, dst, angle)
+>> dst = moildev.Rotate(w, h, image_input, angle)
 >> result = cv2.resize(dst, (800, 600), interpolation=cv2.INTER_AREA)
 >> cv2.imshow("Result", result)
 >> cv2.waitKey(0)
