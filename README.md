@@ -13,7 +13,7 @@ Moildev Library is a collection of functions support python to developments fish
 ## 1. How to install
 This library now available in pypi distribution. visit link here https://pypi.org/project/Moildev/ 
 ```
-$ pip install moildev
+$ pip install moildev or $ pip3 install moildev
 ```
 
 ### 2. Import Library
@@ -21,7 +21,7 @@ $ pip install moildev
 Open python3 from your terminal or command prompt :
 
 ```
-$ python
+$ python or $ python3
 ```
 
 Then import moildev library
@@ -207,7 +207,7 @@ moildev.PanoramaM_Rt(mapX, mapY, w, h, m_ratio, alpha_max, iC_alpha_degree, iC_b
 
 **Purpose:**
 
-To generate a pair of X-Y Maps for alpha within 0..alpha_max degree, the result X-Y Maps can be used later to generate a panorama image from the original fish-eye image. The panorama image centered at the 3D direction with alpha = iC_alpha_degree and beta = iC_beta_degree.
+To generate a pair of X-Y Maps for alpha within 0.. alpha_max degree, the result X-Y Maps can be used later to generate a panorama image from the original fish-eye image. The panorama image centered at the 3D direction with alpha = iC_alpha_degree and beta = iC_beta_degree.
 
 **Parameter:**
 
@@ -318,7 +318,7 @@ Rotate(w, h, src, angle)
 
 **Purpose:**
 
-To rotate the image with specific angle and fast.
+To rotate the image with specific angle and fast using opencv tranformation function.
 
 **Parameter:**
 
